@@ -1,24 +1,14 @@
 {
-  "name": "zsh-tournament",
+  "name": "zshs-tournament",
   "version": "1.0.0",
-  "description": "",
-  "main": "script.js",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/johncarloortiz206-coder/zshs-deploy.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/johncarloortiz206-coder/zshs-deploy/issues"
-  },
-  "homepage": "https://github.com/johncarloortiz206-coder/zshs-deploy#readme",
   "devDependencies": {
-    "vite": "^8.3.8"
+    "vite": "^7.0.0"
   }
 }
