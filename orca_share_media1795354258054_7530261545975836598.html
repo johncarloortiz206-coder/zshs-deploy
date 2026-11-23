@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <h1>live srver</h1>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZSHS Esports Tournament Registration</title>
+<style>
+:root{
+  --bg:#080d1d;--panel:#111b35;--panel2:#172442;--line:#34476e;
+  --cyan:#31e6ef;--blue:#548cff;--yellow:#ffc52e;--pink:#ff5c91;
+  --text:#f5f7ff;--muted:#a8b6d4;--green:#43e39a;--red:#ff6175;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+   linear-gradient(rgba(61,95,150,.10) 1px,transparent 1px),
+   linear-gradient(90deg,rgba(61,95,150,.10) 1px,transparent 1px),
+   radial-gradient(ellipse at 15% 15%,#1c3158 0,transparent 45%),
+   radial-gradient(ellipse at 90% 80%,#30243d 0,transparent 40%),var(--bg);
+  background-size:32px 32px,32px 32px,auto,auto,auto;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.topbar{
+  max-width:1400px;margin:auto;padding:20px 26px;display:flex;
+  align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.5px}
+.logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+ background:linear-gradient(135deg,#a9ff35,#1bd6dd);color:#071321;font-size:23px}
+.brand span{color:var(--cyan)}
+.school-tag,.tag{font-size:10px;letter-spacing:1px;font-weight:900;padding:6px 9px;
+ border:1px solid #9d7930;color:var(--yellow);border-radius:5px}
+.nav-actions{display:flex;gap:9px;flex-wrap:wrap}
+.pill,.btn{
+ border:1px solid var(--line);border-radius:9px;padding:10px 13px;
+ color:var(--text);background:#101b32;font-size:11px;font-weight:900;letter-spacing:.5px
+}
+.pill.green{color:var(--green);border-color:#277d62}
+.pill.yellow{color:var(--yellow);border-color:#a87b22}
+.pill.red{color:var(--red);border-color:#9d4056}
+.pill.cyan{color:var(--cyan);border-color:#287e8c}
+main{max-width:1400px;margin:auto;padding:0 26px 40px}
+.host{
+ border:1px solid #d49d29;border-radius:17px;padding:18px 20px;margin:12px 0 22px;
+ background:linear-gradient(110deg,rgba(105,80,24,.28),rgba(20,31,57,.9));
+ display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;
+ box-shadow:0 0 25px rgba(255,197,46,.07)
+}
+.host small{color:var(--yellow);font-weight:900;letter-spacing:1.3px}
+.host h3{margin:6px 0;font-size:20px}
+.host p{margin:0;color:var(--muted);font-size:12px}
+.host-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn.primary{background:linear-gradient(90deg,#1dd6e5,#58aaff);color:#061525;border:0}
+.btn.gold{background:linear-gradient(90deg,#ffb91f,#ffe45a);color:#241800;border:0}
+.btn.danger{color:#fff;background:#9c2f4a;border:0}
+.hero{
+ border:1px solid #48618d;border-radius:18px;padding:28px;margin-bottom:22px;
+ background:linear-gradient(115deg,rgba(26,48,88,.96),rgba(22,31,59,.94));
+ display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
+ position:relative;overflow:hidden
+}
+.hero:before{content:"";position:absolute;left:0;top:0;width:55px;height:5px;background:var(--cyan)}
+.hero:after{content:"";position:absolute;right:0;bottom:0;width:55px;height:5px;background:var(--yellow)}
+.eyebrow{font-size:10px;color:var(--cyan);letter-spacing:1.5px;font-weight:900}
+.hero h1{font-size:clamp(25px,4vw,42px);line-height:1.02;margin:12px 0;text-transform:uppercase}
+.hero h1 span{color:var(--cyan)}
+.hero p{color:#d0d9ed;max-width:690px;line-height:1.55;font-size:13px}
+.stats{display:flex;gap:10px}
+.stat{min-width:95px;text-align:center;padding:16px 12px;border:1px solid var(--line);
+ border-radius:13px;background:#0c1730}
+.stat b{display:block;font-size:24px;margin:8px 0}
+.stat small{font-size:9px;color:var(--muted);font-weight:900;letter-spacing:1px}
+.stat.mlbb{border-color:#238d9a}.stat.mlbb b{color:var(--cyan)}
+.stat.codm{border-color:#9c456b}.stat.codm b{color:var(--pink)}
+.layout{display:grid;grid-template-columns:minmax(320px, .9fr) minmax(440px,1.35fr);gap:22px}
+.panel{background:rgba(17,27,53,.94);border:1px solid #3b527d;border-radius:17px;padding:22px;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}
+.panel-head h2{font-size:20px;margin:5px 0 0;text-transform:uppercase}
+.panel-head .eyebrow{color:var(--cyan)}
+.form-label{display:block;font-size:10px;letter-spacing:1px;font-weight:900;margin:17px 0 8px;color:#dce6ff}
+.required{color:var(--pink)}
+input,select{
+ width:100%;padding:13px 14px;color:#f5f7ff;background:#0b1530;
+ border:1px solid #52668e;border-radius:10px;outline:none
+}
+input:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #31e6ef20}
+input::placeholder{color:#9aa9c7}
+.divisions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.division{border:1px solid #596a8e;border-radius:13px;padding:14px;background:#101a34;
+ text-align:left;color:var(--text);min-height:112px}
+.division.active.mlbb{border:2px solid var(--cyan);background:#12364a}
+.division.active.codm{border:2px solid var(--pink);background:#3a1c3a}
+.division .symbol{font-size:22px;display:block;margin-bottom:10px}
+.division strong{display:block;font-size:16px}
+.division small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.roster-title{display:flex;justify-content:space-between;align-items:center;margin-top:18px}
+.roster-title label{font-size:10px;letter-spacing:1px;font-weight:900}
+.required-tag{font-size:9px;color:var(--cyan);border:1px solid #287e8c;padding:5px 7px;border-radius:5px}
+.player{margin-top:9px;position:relative}
+.player input{padding-left:48px}
+.player span{position:absolute;left:14px;top:50%;transform:translateY(-50%);
+ font-size:11px;font-weight:900;color:var(--cyan)}
+.submit{width:100%;margin-top:20px;padding:15px;border:0;border-radius:11px;
+ background:linear-gradient(90deg,#23dbe9,#62aaff);color:#071525;font-weight:900;
+ letter-spacing:1px;box-shadow:0 0 20px #31e6ef35}
+.submit:disabled{opacity:.45;cursor:not-allowed}
+.note{text-align:center;color:var(--muted);font-size:10px;margin-top:12px}
+.roster-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.search{flex:1;min-width:190px}
+.filter{padding:10px 13px;border-radius:9px;border:1px solid var(--line);
+ background:#0b1530;color:var(--muted);font-size:10px;font-weight:900}
+.filter.active{background:#25466b;color:#fff;border-color:var(--cyan)}
+.squad-list{display:grid;gap:12px}
+.empty{border:1px dashed #52668e;border-radius:13px;padding:40px 15px;text-align:center;color:var(--muted)}
+.empty .empty-icon{font-size:30px;margin-bottom:10px}
+.empty strong{display:block;color:#e8edff;margin-bottom:6px}
+.squad{border:1px solid #3d5278;border-radius:12px;padding:15px;background:#0c1730}
+.squad-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.squad h3{margin:0 0 6px;font-size:16px}
+.squad-meta{font-size:11px;color:var(--muted);line-height:1.5}
+.game-badge{font-size:9px;font-weight:900;letter-spacing:1px;padding:6px 8px;border-radius:6px}
+.game-badge.mlbb{color:var(--cyan);background:#123b4b}
+.game-badge.codm{color:var(--pink);background:#46233e}
+.players{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:13px}
+.player-chip{padding:8px;background:#172442;border-radius:7px;font-size:10px;color:#dce6ff}
+.squad-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:13px}
+.ticket{font-size:9px;color:var(--muted)}
+.delete{background:transparent;color:var(--red);border:1px solid #8e3d55;border-radius:7px;padding:7px 9px;font-size:10px}
+.footer{text-align:center;color:#7384a8;font-size:10px;margin-top:25px}
+@media(max-width:950px){.hero{grid-template-columns:1fr}.stats{flex-wrap:wrap}.layout{grid-template-columns:1fr}}
+@media(max-width:520px){main{padding:0 12px 25px}.topbar{padding:15px 12px}.panel{padding:16px}.host{padding:15px}.divisions{grid-template-columns:1fr 1fr}.players{grid-template-columns:1fr}.hero{padding:20px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="logo">🏆</div><div>ZSHS <span>TOURNAMENT</span></div><div class="school-tag">ZARAGOZA SHS</div></div>
+  <div class="nav-actions">
+    <span class="pill green" id="portalStatus">● PORTAL OPEN</span>
+    <button class="pill yellow" id="hostToggle">♛ HOST MODE ACTIVE</button>
+    <button class="pill cyan" id="shareBtn">↗ SHARE LINK</button>
+  </div>
+</header>
+
+<main>
+  <section class="host">
+    <div><small>ADMINISTRATOR OVERRIDE &nbsp; OWNER ACCESS</small><h3>⚙ HOST COMMAND CENTER</h3>
+      <p>Manage squad approvals, edit rosters, toggle registration access, or export official roster sheets.</p></div>
+    <div class="host-actions">
+      <button class="btn" id="registrationToggle">🔓 REGISTRATION: OPEN</button>
+      <button class="btn gold" id="exportBtn">▣ EXPORT ROSTER CSV</button>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">● OFFICIAL CAMPUS ESPORTS REGISTRATION // OPEN</div>
+      <h1>ZARAGOZA SENIOR HIGH<br>SCHOOL <span>TOURNAMENT</span></h1>
+      <p>Represent your strand and section in the official ZSHS TOURNAMENT. Assemble your 5-player squad, enter your Grade Level &amp; Section, and lock in your slot for <b style="color:var(--cyan)">Mobile Legends: Bang Bang (MLBB)</b> or <b style="color:var(--pink)">Call of Duty: Mobile (CODM)</b>.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><small>TOTAL SQUADS</small><b id="totalCount">0</b><small>▰ LIVE SYNC</small></div>
+      <div class="stat mlbb"><small>MLBB TEAMS</small><b id="mlbbCount">0</b><small>5V5 DRAFT</small></div>
+      <div class="stat codm"><small>CODM TEAMS</small><b id="codmCount">0</b><small>5V5 MP</small></div>
+    </div>
+  </section>
+
+  <section class="layout">
+    <div class="panel">
+      <div class="panel-head"><div><div class="eyebrow">ENTRY TERMINAL // 5-PLAYER ROSTER</div><h2>SQUAD REGISTRATION</h2></div><span style="font-size:24px">▣</span></div>
+      <form id="registrationForm">
+        <span class="form-label">SELECT BATTLE DIVISION <span class="required">*</span></span>
+        <div class="divisions">
+          <button type="button" class="division active mlbb" data-game="MLBB">
+            <span class="symbol">🔵</span><strong>MLBB</strong><small>Mobile Legends: Bang Bang</small>
+          </button>
+          <button type="button" class="division codm" data-game="CODM">
+            <span class="symbol">🎯</span><strong>CODM</strong><small>Call of Duty: Mobile</small>
+          </button>
+        </div>
+        <input type="hidden" id="game" value="MLBB">
+        <label class="form-label" for="teamName">TEAM / SQUAD NAME <span class="required">*</span></label>
+        <input id="teamName" maxlength="45" placeholder="e.g. ZSHS PHANTOM VANGUARD" required>
+        <label class="form-label" for="grade">GRADE LEVEL &amp; SECTION <span class="required">*</span></label>
+        <input id="grade" maxlength="60" placeholder="e.g. Grade 12 - STEM A / ICT-1" required>
+        <div class="roster-title"><label>5-PLAYER ACTIVE ROSTER <span class="required">*</span></label><span class="required-tag">ALL 5 REQUIRED</span></div>
+        <div id="players"></div>
+        <button class="submit" id="submitBtn" type="submit">✦ LOCK IN 5-PLAYER ROSTER</button>
+        <div class="note">● Real-time public tournament roster for Zaragoza Senior High School.</div>
+      </form>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><div><div class="eyebrow" style="color:var(--green)">● LIVE TOURNAMENT ROSTER</div><h2>REGISTERED SQUADS</h2></div></div>
+      <div class="roster-tools">
+        <input class="search" id="searchInput" placeholder="⌕ Search by team name, grade/section, any player name, or ticket ID...">
+        <button class="filter active" data-filter="ALL">ALL</button>
+        <button class="filter" data-filter="MLBB">MLBB</button>
+        <button class="filter" data-filter="CODM">CODM</button>
+      </div>
+      <div class="squad-list" id="squadList"></div>
+    </div>
+  </section>
+  <div class="footer">ZSHS ESPORTS TOURNAMENT REGISTRATION • DEMO VERSION</div>
+</main>
+
+<script>
+const STORAGE_KEY = "zshsTournamentSquads_v1";
+let squads = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+let selectedGame = "MLBB";
+let activeFilter = "ALL";
+let registrationOpen = true;
+let hostMode = true;
+
+const $ = id => document.getElementById(id);
+const playersBox = $("players");
+
+for (let i = 1; i <= 5; i++) {
+  const div = document.createElement("div");
+  div.className = "player";
+  const span = document.createElement("span");
+  span.textContent = "P" + i;
+  const input = document.createElement("input");
+  input.type = "text";
+  input.id = "player" + i;
+  input.maxLength = 55;
+  input.required = true;
+  input.placeholder = i === 1 ? "Player 1 Full Name / IGN (Team Captain)" : `Player ${i} Full Name / IGN`;
+  div.append(span, input);
+  playersBox.appendChild(div);
+}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(squads));
+}
+function makeTicket() {
+  return "ZSHS-" + Date.now().toString(36).toUpperCase().slice(-6);
+}
+function updateStats() {
+  $("totalCount").textContent = squads.length;
+  $("mlbbCount").textContent = squads.filter(s => s.game === "MLBB").length;
+  $("codmCount").textContent = squads.filter(s => s.game === "CODM").length;
+}
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[ch]);
+}
+function renderSquads() {
+  const q = $("searchInput").value.trim().toLowerCase();
+  const filtered = squads.filter(s => {
+    const matchesGame = activeFilter === "ALL" || s.game === activeFilter;
+    const searchable = [s.team,s.grade,s.ticket,...s.players].join(" ").toLowerCase();
+    return matchesGame && searchable.includes(q);
+  });
+  const list = $("squadList");
+  list.innerHTML = "";
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty"><div class="empty-icon">👥</div><strong>${squads.length ? "NO MATCHING SQUADS" : "NO SQUADS REGISTERED YET"}</strong><span>${squads.length ? "Try another search or filter." : "Be the first squad to lock in your 5-player roster!"}</span></div>`;
+  } else {
+    filtered.forEach(s => {
+      const card = document.createElement("article");
+      card.className = "squad";
+      const badgeClass = s.game.toLowerCase();
+      card.innerHTML = `
+        <div class="squad-top">
+          <div><h3>${escapeHTML(s.team)}</h3><div class="squad-meta">${escapeHTML(s.grade)}<br>${escapeHTML(s.dateLabel)}</div></div>
+          <span class="game-badge ${badgeClass}">${s.game}</span>
+        </div>
+        <div class="players">${s.players.map((p,i)=>`<div class="player-chip">P${i+1} ${i===0?"★ ":""}${escapeHTML(p)}</div>`).join("")}</div>
+        <div class="squad-bottom"><span class="ticket">TICKET: ${escapeHTML(s.ticket)}</span><button class="delete" data-delete="${escapeHTML(s.ticket)}">REMOVE</button></div>`;
+      list.appendChild(card);
+    });
+  }
+  updateStats();
+}
+document.querySelectorAll(".division").forEach(btn => {
+  btn.addEventListener("click", () => {
+    selectedGame = btn.dataset.game;
+    $("game").value = selectedGame;
+    document.querySelectorAll(".division").forEach(b => b.classList.toggle("active", b === btn));
+  });
+});
+document.querySelectorAll(".filter").forEach(btn => {
+  btn.addEventListener("click", () => {
+    activeFilter = btn.dataset.filter;
+    document.querySelectorAll(".filter").forEach(b => b.classList.toggle("active", b === btn));
+    renderSquads();
+  });
+});
+$("searchInput").addEventListener("input", renderSquads);
+$("squadList").addEventListener("click", e => {
+  const button = e.target.closest("[data-delete]");
+  if (!button) return;
+  if (!hostMode) return alert("Enable host mode to remove a squad.");
+  if (confirm("Remove this squad from the roster?")) {
+    squads = squads.filter(s => s.ticket !== button.dataset.delete);
+    save(); renderSquads();
+  }
+});
+$("registrationForm").addEventListener("submit", e => {
+  e.preventDefault();
+  if (!registrationOpen) return alert("Registration is currently closed by the host.");
+  const team = $("teamName").value.trim();
+  const grade = $("grade").value.trim();
+  const playerNames = Array.from({length:5},(_,i)=>$("player"+(i+1)).value.trim());
+  if (!team || !grade || playerNames.some(p=>!p)) return alert("Please complete all required fields.");
+  if (squads.some(s=>s.team.toLowerCase()===team.toLowerCase() && s.game===selectedGame)) {
+    return alert("A team with this name is already registered in this division.");
+  }
+  squads.unshift({
+    ticket:makeTicket(), game:selectedGame, team, grade,
+    players:playerNames, dateLabel:new Date().toLocaleDateString()
+  });
+  save(); renderSquads(); e.target.reset();
+  alert("Squad registration successful!");
+});
+function updateRegistrationUI() {
+  $("registrationToggle").textContent = registrationOpen ? "🔓 REGISTRATION: OPEN" : "🔒 REGISTRATION: CLOSED";
+  $("portalStatus").textContent = registrationOpen ? "● PORTAL OPEN" : "● PORTAL CLOSED";
+  $("portalStatus").className = registrationOpen ? "pill green" : "pill red";
+  $("submitBtn").disabled = !registrationOpen;
+}
+$("registrationToggle").addEventListener("click", () => {
+  if (!hostMode) return alert("Enable host mode first.");
+  registrationOpen = !registrationOpen; updateRegistrationUI();
+});
+$("hostToggle").addEventListener("click", () => {
+  hostMode = !hostMode;
+  $("hostToggle").textContent = hostMode ? "♛ HOST MODE ACTIVE" : "♛ HOST MODE OFF";
+  $("hostToggle").classList.toggle("yellow",hostMode);
+  $("hostToggle").classList.toggle("red",!hostMode);
+});
+$("exportBtn").addEventListener("click", () => {
+  if (!hostMode) return alert("Enable host mode to export the roster.");
+  if (!squads.length) return alert("There are no registered squads to export.");
+  const rows = [["Ticket ID","Game","Team Name","Grade & Section","Player 1 (Captain)","Player 2","Player 3","Player 4","Player 5","Registered Date"]];
+  squads.forEach(s=>rows.push([s.ticket,s.game,s.team,s.grade,...s.players,s.dateLabel]));
+  const csv = rows.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
+  const blob = new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href=url; a.download="ZSHS_Tournament_Roster.csv"; a.click();
+  URL.revokeObjectURL(url);
+});
+$("shareBtn").addEventListener("click", async () => {
+  const shareData = {title:"ZSHS Tournament Registration",text:"Register your 5-player esports squad here:",url:location.href};
+  try {
+    if (navigator.share) await navigator.share(shareData);
+    else { await navigator.clipboard.writeText(location.href); alert("Page link copied. Upload this HTML to a hosting service before sharing it with other devices."); }
+  } catch(err) { /* share sheet was closed */ }
+});
+updateRegistrationUI();
+renderSquads();
+</script>
+</body>
+</html>
